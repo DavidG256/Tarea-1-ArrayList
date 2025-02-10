@@ -1,93 +1,87 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 
-public class TelefonoMovil {
-
-
+class TelefonoMovil {
     private String myNumber;
     private ArrayList<Contacto> myContacts;
-
 
     public TelefonoMovil(String myNumber) {
         this.myNumber = myNumber;
         this.myContacts = new ArrayList<>();
     }
 
-
     public boolean addNewContact(Contacto contact) {
-        if (findContact(contact.getName()) == -1) {
-            myContacts.add(contact);
-            return true;
+        if (findContact(contact.getName()) >= 0) {
+            return false;
         }
-
-        return false;
+        myContacts.add(contact);
+        return true;
     }
-
 
     public boolean updateContact(Contacto oldContact, Contacto newContact) {
-        boolean booleano;
-
-        if ( findContact(oldContact) != -1 && findContact() ) {
-            return true;
+        int foundPosition = findContact(oldContact);
+        if (foundPosition < 0 || findContact(newContact.getName()) >= 0) {
+            return false;
         }
-
-        return false;
+        myContacts.set(foundPosition, newContact);
+        return true;
     }
-
 
     public boolean removeContact(Contacto contact) {
-        boolean booleano;
-
-        if (findContact(myContacts = findContact(()){
-            return true;
-
+        int foundPosition = findContact(contact);
+        if (foundPosition < 0) {
+            return false;
         }
-
-        return false;
+        myContacts.remove(foundPosition);
+        return true;
     }
-
-
-
 
     private int findContact(Contacto contact) {
-        for (int i = 0; i < myContacts.size(); i++) {
-            if (myContacts.get(i).getName().equals(contact.getName())) {
-                return i;
-            }
-        }
-        return -1;
+        return myContacts.indexOf(contact);
     }
-
 
     private int findContact(String name) {
         for (int i = 0; i < myContacts.size(); i++) {
-            if (myContacts.get(i).getName().equals(name)) {
+            if (myContacts.get(i).getName().equalsIgnoreCase(name)) {
                 return i;
-
             }
-
         }
         return -1;
     }
 
-    public int ordenarNombre(){
+    public Contacto queryContact(String name) {
+        int position = findContact(name);
+        return (position >= 0) ? myContacts.get(position) : null;
+    }
 
+    public void printContacts() {
+        System.out.println("Lista de contactos:");
+        for (int i = 0; i < myContacts.size(); i++) {
+            System.out.println((i + 1) + ". " + myContacts.get(i).getName() + " -> " + myContacts.get(i).getPhoneNumber());
+        }
+    }
 
-
-        return findContact("hola");
+    public Contacto findContactByPhone(String phone) {
+        for (Contacto contact : myContacts) {
+            if (contact.getPhoneNumber().equals(phone)) {
+                return contact;
+            }
+        }
+        return null;
     }
 
 
-    private int queryContact (String contact){
-
-        return 0;
+    public void sortContactsByName() {
+        myContacts.sort(Comparator.comparing(Contacto::getName, String.CASE_INSENSITIVE_ORDER));
     }
 
 
-    public void printContacts () {
-        System.out.println();
-        System.out.println();
-
+    public void clearContacts() {
+        myContacts.clear();
     }
 
 
+    public int getContactCount() {
+        return myContacts.size();
+    }
 }
