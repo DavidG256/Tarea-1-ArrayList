@@ -46,6 +46,8 @@ public class TelefonoMovil {
     }
 
 
+
+
     private int findContact(Contacto contact) {
         for (int i = 0; i < myContacts.size(); i++) {
             if (myContacts.get(i).getName().equals(contact.getName())) {
@@ -65,6 +67,13 @@ public class TelefonoMovil {
 
         }
         return -1;
+    }
+
+    public int ordenarNombre(){
+
+
+
+        return findContact("hola");
     }
 
 
