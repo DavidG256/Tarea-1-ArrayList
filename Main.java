@@ -3,10 +3,10 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        TelefonoMovil telefono = new TelefonoMovil("19");
-        boolean exit = false;
+        TelefonoMovil miTelefono = new TelefonoMovil("123456789");
+        boolean salir = false;
 
-        while (!exit) {
+        while (!salir) {
             System.out.println("Menú:");
             System.out.println("1. Imprimir contactos");
             System.out.println("2. Agregar contacto");
@@ -19,43 +19,82 @@ public class Main {
             System.out.println("9. Mostrar número de contactos");
             System.out.println("0. Salir");
             System.out.print("Opción: ");
-
-            int option = scanner.nextInt();
+            int opcion = scanner.nextInt();
             scanner.nextLine();
 
-            switch (option) {
-                case 1 -> telefono.printContacts();
-                case 2 -> {
-                    System.out.print("Nombre: ");
-                    String name = scanner.nextLine();
-                    System.out.print("Teléfono: ");
-                    String phone = scanner.nextLine();
-                    if (telefono.addNewContact(Contacto.createContact(name, phone))) {
+            switch (opcion) {
+                case 1:
+                    miTelefono.printContacts();
+                    break;
+                case 2:
+                    System.out.println("Ingrese nombre:");
+                    String nombre = scanner.nextLine();
+                    System.out.println("Ingrese teléfono:");
+                    String telefono = scanner.nextLine();
+                    Contacto nuevo = Contacto.CreateContact(nombre, telefono);
+                    if (miTelefono.addNewContact(nuevo)) {
                         System.out.println("Contacto agregado.");
                     } else {
-                        System.out.println("No se pudo agregar el contacto.");
+                        System.out.println("El contacto ya existe.");
                     }
-                }
-                case 3 -> {
-                    System.out.print("Nombre del contacto a actualizar: ");
-                    String name = scanner.nextLine();
-                    Contacto existingContact = telefono.queryContact(name);
-                    if (existingContact == null) {
+                    break;
+                case 3:
+                    System.out.println("Ingrese nombre a actualizar:");
+                    String oldName = scanner.nextLine();
+                    Contacto oldContact = miTelefono.queryContact(oldName);
+                    if (oldContact == null) {
                         System.out.println("Contacto no encontrado.");
-                    } else {
-                        System.out.print("Nuevo nombre: ");
-                        String newName = scanner.nextLine();
-                        System.out.print("Nuevo teléfono: ");
-                        String newPhone = scanner.nextLine();
-                        if (telefono.updateContact(existingContact, Contacto.createContact(newName, newPhone))) {
-                            System.out.println("Contacto actualizado.");
-                        } else {
-                            System.out.println("No se pudo actualizar el contacto.");
-                        }
+                        break;
                     }
-                }
-                case 0 -> exit = true;
-                default -> System.out.println("Opción inválida.");
+                    System.out.println("Ingrese nuevo nombre:");
+                    String newName = scanner.nextLine();
+                    System.out.println("Ingrese nuevo teléfono:");
+                    String newPhone = scanner.nextLine();
+                    Contacto updatedContact = Contacto.CreateContact(newName, newPhone);
+                    if (miTelefono.updateContact(oldContact, updatedContact)) {
+                        System.out.println("Contacto actualizado.");
+                    } else {
+                        System.out.println("Error al actualizar.");
+                    }
+                    break;
+                case 4:
+                    System.out.println("Ingrese nombre a eliminar:");
+                    String removeName = scanner.nextLine();
+                    Contacto removeContact = miTelefono.queryContact(removeName);
+                    if (removeContact != null && miTelefono.removeContact(removeContact)) {
+                        System.out.println("Contacto eliminado.");
+                    } else {
+                        System.out.println("No encontrado.");
+                    }
+                    break;
+                case 5:
+                    System.out.println("Ingrese nombre a buscar:");
+                    String searchName = scanner.nextLine();
+                    Contacto foundContact = miTelefono.queryContact(searchName);
+                    System.out.println(foundContact != null ? foundContact.getName() + " -> " + foundContact.getPhoneNumber() : "No encontrado.");
+                    break;
+                case 6:
+                    System.out.println("Ingrese teléfono a buscar:");
+                    String searchPhone = scanner.nextLine();
+                    Contacto phoneContact = miTelefono.searchByPhone(searchPhone);
+                    System.out.println(phoneContact != null ? phoneContact.getName() + " -> " + phoneContact.getPhoneNumber() : "No encontrado.");
+                    break;
+                case 7:
+                    miTelefono.sortContacts();
+                    System.out.println("Contactos ordenados.");
+                    break;
+                case 8:
+                    miTelefono.removeAllContacts();
+                    System.out.println("Todos los contactos eliminados.");
+                    break;
+                case 9:
+                    System.out.println("Número de contactos: " + miTelefono.getNumberOfContacts());
+                    break;
+                case 0:
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
             }
         }
         scanner.close();

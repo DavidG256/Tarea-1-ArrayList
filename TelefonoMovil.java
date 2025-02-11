@@ -19,20 +19,20 @@ class TelefonoMovil {
     }
 
     public boolean updateContact(Contacto oldContact, Contacto newContact) {
-        int foundPosition = findContact(oldContact);
-        if (foundPosition < 0 || findContact(newContact.getName()) >= 0) {
+        int position = findContact(oldContact);
+        if (position < 0 || findContact(newContact.getName()) >= 0) {
             return false;
         }
-        myContacts.set(foundPosition, newContact);
+        myContacts.set(position, newContact);
         return true;
     }
 
     public boolean removeContact(Contacto contact) {
-        int foundPosition = findContact(contact);
-        if (foundPosition < 0) {
+        int position = findContact(contact);
+        if (position < 0) {
             return false;
         }
-        myContacts.remove(foundPosition);
+        myContacts.remove(position);
         return true;
     }
 
@@ -54,34 +54,31 @@ class TelefonoMovil {
         return (position >= 0) ? myContacts.get(position) : null;
     }
 
-    public void printContacts() {
-        System.out.println("Lista de contactos:");
-        for (int i = 0; i < myContacts.size(); i++) {
-            System.out.println((i + 1) + ". " + myContacts.get(i).getName() + " -> " + myContacts.get(i).getPhoneNumber());
-        }
-    }
-
-    public Contacto findContactByPhone(String phone) {
-        for (Contacto contact : myContacts) {
-            if (contact.getPhoneNumber().equals(phone)) {
-                return contact;
+    public Contacto searchByPhone(String phoneNumber) {
+        for (Contacto c : myContacts) {
+            if (c.getPhoneNumber().equals(phoneNumber)) {
+                return c;
             }
         }
         return null;
     }
 
-
-    public void sortContactsByName() {
+    public void sortContacts() {
         myContacts.sort(Comparator.comparing(Contacto::getName, String.CASE_INSENSITIVE_ORDER));
     }
 
-
-    public void clearContacts() {
+    public void removeAllContacts() {
         myContacts.clear();
     }
 
-
-    public int getContactCount() {
+    public int getNumberOfContacts() {
         return myContacts.size();
+    }
+
+    public void printContacts() {
+        System.out.println("Lista contactos:");
+        for (int i = 0; i < myContacts.size(); i++) {
+            System.out.println((i + 1) + ". " + myContacts.get(i).getName() + " -> " + myContacts.get(i).getPhoneNumber());
+        }
     }
 }
